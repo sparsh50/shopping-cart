@@ -1,0 +1,99 @@
+﻿@model IEnumerable<ECommerceAppSparsh.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div class="d-flex justify-content-between">
+    <div>
+        <a class="btn btn-primary" asp-action="Create">Add Product</a>
+    </div>
+    <div>
+        @using (Html.BeginForm())
+        {
+            <p>
+                @Html.TextBox("SearchString")
+                <input class="btn btn-success p-1" type="submit" value="Search" />
+            </p>
+        }
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th>
+               Product Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+
+                <td>
+                    <a class="btn btn-primary me-2" asp-action="Edit" asp-controller="Admin" asp-route-id="@item.ProductId">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-controller="Admin" asp-route-id="@item.ProductId">Delete</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    int totalPages = ViewBag.TotalPages;
+}
+
+<form asp-action="Index">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination mt-5">
+            @if (ViewBag.PageNo != 1)
+            {
+                <li class="page-item">
+                    @Html.ActionLink("Prev", "Index", new { sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, pageNo = ViewBag.PageNo - 1 }, new { @class = "page-link btn " })
+                </li>
+            }
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.PageNo ? "active" : "")">
+                    @Html.ActionLink(i.ToString(), "Index", new { sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, pageNo = i }, new { @class = "page-link" })
+                </li>
+            }
+            @if (ViewBag.PageNo != totalPages && totalPages != 0)
+            {
+                <li class="page-item">
+                    @Html.ActionLink("Next", "Index", new { sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, pageNo = ViewBag.PageNo + 1 }, new { @class = "page-link btn " })
+                </li>
+            }
+        </ul>
+    </nav>
+</form>
+
